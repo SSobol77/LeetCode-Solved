@@ -1,78 +1,76 @@
-# 49. Group Anagrams
+# 49.  Group Anagrams.
 
 # Topic: Array, Hash Table, String, Sorting.
 
-'''
-# Task:
--------
+"""
+### Task:
+---
 Given an array of strings strs, group the anagrams together. You can return the answer in any order.
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically 
 using all the original letters exactly once.
 
-Example 1:
+#Example 1:
 Input: strs = ["eat","tea","tan","ate","nat","bat"]
 Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
 
-Example 2:
+#Example 2:
 Input: strs = [""]
 Output: [[""]]
 
-Example 3:
+#Example 3:
 Input: strs = ["a"]
 Output: [["a"]]
- 
-Constraints:
+
+#Constraints:
 1 <= strs.length <= 10^4
 0 <= strs[i].length <= 100
 strs[i] consists of lowercase English letters.
 
-# Testcase:
------------
+
+### Testcase:
+---
 ["eat","tea","tan","ate","nat","bat"]
 [""]
 ["a"]
 
-# Code:
---------
+
+### Code:
+---
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         
-'''
-# Solution:
-from typing import List
-from collections import defaultdict
-
+"""
+### Solution:
 class Solution:
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
-        # Using defaultdict to automatically handle new keys
-        anagrams = defaultdict(list)
-
-        # Iterate over each string in the list
-        for s in strs:
-            # Sort the string and use it as a key
-            sorted_str = ''.join(sorted(s))
-
-            # Append the original string to the corresponding list
-            anagrams[sorted_str].append(s)
-
-        # Return the grouped anagrams as a list of lists
-        return list(anagrams.values())
-
-# Test cases
-solution = Solution()
-print(solution.groupAnagrams(["eat","tea","tan","ate","nat","bat"]))  # [["bat"],["nat","tan"],["ate","eat","tea"]]
-print(solution.groupAnagrams([""]))                                  # [[""]]
-print(solution.groupAnagrams(["a"]))                                 # [["a"]]
+        # Create a dictionary to store anagrams
+        anagram_groups = {}
+        
+        for word in strs:
+            # Sort the characters of the word to create a unique key
+            sorted_word = ''.join(sorted(word))
+            
+            # If the sorted_word is not in the dictionary, add it with an empty list as the value
+            if sorted_word not in anagram_groups:
+                anagram_groups[sorted_word] = []
+            
+            # Append the original word to the list of anagrams for the sorted_word
+            anagram_groups[sorted_word].append(word)
+        
+        # Return the values of the dictionary as a list of lists
+        return list(anagram_groups.values())
 
 
-# Description:
+### Description:
 '''
-We use defaultdict from the collections module, which simplifies the code by removing the need to check 
-if a key exists in the dictionary.
-The use of defaultdict(list) means that if a key doesn't exist, it will automatically create a new list 
-for that key, which simplifies the logic inside the loop.
-The core algorithm remains the same because it's already optimized for this problem. The sorting of strings 
-and grouping based on sorted strings is the most efficient approach for this problem.
+To group anagrams together efficiently, you can use a dictionary where the keys are sorted versions of the words, and the 
+values are lists of anagrams
+
+This code iterates through each word in the input list strs, sorts its characters to create a sorted key, and then adds 
+the original word to the list of anagrams associated with that key in the anagram_groups dictionary.
+
+The result is a list of lists where each inner list contains all the anagrams of a specific group. This solution has a 
+time complexity of O(n * k * log(k)), where n is the number of words and k is the maximum length of a word.
 
 '''
