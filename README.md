@@ -18,6 +18,6 @@
 
 <h4 align="center"><img src="https://www.svgrepo.com/show/373280/linux-opened.svg" width="40" height="40"/> . . My LeetCode Solutions Rust, C/C++, Java, Python, SQL</h4>
 
-<img src="https://github.com/SSobol77/LeetCode-Solved/blob/main/leetcode.jpg" width="100" height="100"/> 
-# ![daftpunktocat-guy](https://github.com/SSobol77/LeetCode-Solved/assets/108773983/922f90d9-1ed0-45c6-b16e-d490e220c819)
+
+<h1 align="center"><img src="https://github.com/SSobol77/LeetCode-Solved/blob/main/daftpunktocat-guy.gif" width="200" height="200"/></h1>
 
