@@ -1,0 +1,74 @@
+// 194. Transpose File.
+
+// Topic: Shell
+
+/*
+### Task:
+---
+
+Given a text file file.txt, transpose its content.
+
+You may assume that each row has the same number of columns, and each field is separated by the ' ' character.
+
+Example:
+
+If file.txt has the following content:
+
+    name age
+    alice 21
+    ryan 30
+
+Output the following:
+
+    name alice ryan
+    age 21 30
+
+
+### Code:
+---
+# Read from the file file.txt and print its transposed content to stdout.
+
+
+*/
+// Solution: ----------------------------------------------
+
+#!/bin/bash
+awk '
+{
+    for (i = 1; i <= NF; i++) {
+        if(NR == 1) {
+            transposed[i] = $i;
+        } else {
+            transposed[i] = transposed[i] " " $i;
+        }
+    }
+}
+END {
+    for (i = 1; i <= NF; i++) {
+        print transposed[i];
+    }
+}' file.txt
+
+
+
+// Description: ==============================================
+/*
+
+To transpose the contents of a text file (`file.txt`) in a shell environment, you can use a combination of Unix commands such as `awk`. 
+
+Explanation:
+
+1. `awk` is used to process the text file. It reads the file line by line.
+
+2. In the main block `{ ... }`, it iterates over each field (`$i`) in a row. `NF` is the number of fields in the current row, and `NR` 
+   is the current record number (line number).
+
+3. For each field, it checks if it's the first row (`NR == 1`). If so, it initializes the `transposed` array with the first row's contents. 
+   Otherwise, it appends the current field to the existing value in the `transposed` array.
+
+4. In the `END` block, after processing all lines, it prints each element of the `transposed` array, which now contains the transposed data.
+
+This script will read from `file.txt` and print its transposed content to stdout.
+*/
+
+
