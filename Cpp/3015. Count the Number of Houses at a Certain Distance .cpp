@@ -60,10 +60,82 @@ Constraints:
 1
 1
 
+### Code:
+---
+class Solution {
+public:
+    vector<int> countOfPairs(int n, int x, int y) {
 
-###
-
-
+    }
+};
 
 */
 // Solution:  ----------------------------------------------
+
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> countOfPairs(int n, int x, int y) {
+        vector<int> result(n, 0); // Initialize the result vector
+
+        // Iterate over all possible pairs of houses
+        for (int i = 1; i <= n; ++i) {
+            for (int j = i + 1; j <= n; ++j) {
+                // Calculate direct distance between houses i and j
+                int directDist = j - i;
+
+                // Calculate distance if traveling via the additional street between x and y
+                int viaXyDist = min(abs(x - i), abs(y - i)) + 1 + min(abs(x - j), abs(y - j));
+
+                // Determine the minimum of the two distances
+                int minDist = min(directDist, viaXyDist);
+
+                // Update the count for this minimum distance in the result vector
+                result[minDist - 1] += 2;
+            }
+        }
+
+        return result;
+    }
+};
+
+// Example usage
+int main() {
+    Solution sol;
+
+    // Test cases
+    vector<int> result1 = sol.countOfPairs(3, 1, 3);
+    vector<int> result2 = sol.countOfPairs(5, 2, 4);
+    vector<int> result3 = sol.countOfPairs(4, 1, 1);
+
+    // Print results (this part is just for demonstration and may need proper formatting)
+    for (int num : result1) cout << num << " ";
+    cout << endl;
+    for (int num : result2) cout << num << " ";
+    cout << endl;
+    for (int num : result3) cout << num << " ";
+    cout << endl;
+
+    return 0;
+}
+```
+
+// Description:
+/*
+To solve this problem in C++, we'll use the same approach as in the Python and Java solutions.
+The strategy involves iterating through all pairs of houses and calculating the minimum distance between them,
+either directly or via the additional street. Then, for each pair, increment the count of pairs that correspond
+to this minimum distance. The result will be a vector where each element represents the total number of pairs of
+houses such that the minimum number of streets required to reach one house from the other is the index of that
+element plus one (since it's 1-indexed).
+
+This C++ code follows the same logic as the earlier Python and Java versions. It iterates over each unique pair of
+houses, calculates both the direct distance and the distance via the additional street, and then updates the count
+in the `result` vector based on the minimum of these distances. The `main` function demonstrates how to use the
+`countOfPairs` method and prints the results for the provided test cases.
+
+*/
