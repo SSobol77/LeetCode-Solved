@@ -78,3 +78,107 @@ class Solution {
 }
 
 */
+
+// Solution:
+
+class Solution {
+    public long[] countOfPairs(int n, int x, int y) {
+        // Ensure x is less than y for consistency
+        if (x > y) {
+            int t = x;
+            x = y;
+            y = t;
+        }
+
+        long[] ans = new long[n];  // Array to store the final answer
+        long[] diff = new long[n + 2];  // Array for maintaining differences for efficient computation
+
+        for (int i = 1; i <= n; i++) {
+            // Initial calculation of pairs for each distance i
+            ans[i - 1] += (n - i) * 2;
+
+            // Special case handling when x equals y or x is adjacent to y
+            if (x == y || x == y - 1) {
+                continue;
+            }
+
+            // Calculate adjustments for pairs that have a shorter distance due to the extra street
+            // Case 1: When the path includes a portion of the houses before x
+            long max = (long) Math.min(x - 1, i - 1);
+            long min = (long) Math.max(0, (i - 1 - (n - y)));
+            if (max >= min) {
+                ans[i - 1] += (max - min + 1L) * 2L;
+                if (i + (y - x - 1) <= n - 1) {
+                    ans[i + (y - x - 1) - 1] -= (max - min + 1L) * 2L;
+                }
+            }
+
+            // Case 2: When the path goes through the extra street and involves houses closer to x
+            max = (long) Math.min(x - 1, i - 2);
+            min = (long) Math.max(0, i - 1 - (y - (y + x + 1) / 2 - 1));
+            if (max >= min) {
+                ans[i - 1] += (max - min + 1L) * 2L;
+                int start = y - (i - 1 - (int) min) - (x - (int) min);
+                int end = y - (i - 1 - (int) max) - (x - (int) max);
+                diff[start - 1] -= 2L;
+                diff[end + 1] += 2L;
+            }
+
+            // Case 3: Similar to Case 2 but for houses closer to y
+            max = (long) Math.min(n - y, i - 2);
+            min = (long) Math.max(0, i - 1 - ((y + x - 2) / 2 - x));
+            if (max >= min) {
+                ans[i - 1] += (max - min + 1L) * 2L;
+                int start = y + (int) min - (x + (i - 1 - (int) min));
+                int end = y + (int) max - (x + (i - 1 - (int) max));
+                diff[start - 1] -= 2L;
+                diff[end + 1] += 2L;
+            }
+
+            // Adjusting for cases where the extra street creates a shorter path
+            if (2 * i < y - x + 1) {
+                ans[i - 1] += (long) Math.max(0, i - 2) * 2L;
+                ans[(y - x + 1 - i) - 1] -= (long) Math.max(0, i - 2) * 2L;
+            }
+        }
+
+        // Applying the differences using the diff array to get the final count of pairs
+        for (int i = 0; i < n; i++) {
+            diff[i] += i >= 2 ? diff[i - 2] : 0L;
+            ans[i] += diff[i];
+        }
+
+        return ans;  // Return the final result
+    }
+}
+
+
+// Description:
+/*
+The strategy employed in this code to solve the "Count the Number of Houses at a Certain Distance II" problem revolves around a combination of initial count adjustments and differential updates using prefix sums. Here's a detailed breakdown of the algorithm and the underlying logic:
+
+### Algorithm and Logic:
+
+1. **Sorting `x` and `y`**:
+   - The code starts by ensuring that `x` is always less than or equal to `y`. This simplifies the calculations as it ensures consistency in handling the additional street.
+
+2. **Initial Pair Counts**:
+   - The code then iterates through each possible distance `i` (from 1 to `n`) and initially counts the number of pairs at each distance as if there were no additional street. This is done by realizing that for each distance `i`, there are `2 * (n - i)` pairs because each pair can be traversed in both directions.
+
+3. **Handling the Additional Street**:
+   - The code incorporates the effect of the additional street by adjusting the counts. This adjustment is made in several steps, depending on the position of the houses in relation to `x` and `y`:
+     - **When `x` Equals `y` or Adjacent**: In this scenario, the additional street doesn't create a shortcut, so no adjustment is needed.
+     - **Adjustments for Shortcuts Involving Houses Before `x` and After `y`**: The code calculates how many pairs are affected by the additional street creating a shortcut. This involves calculating the maximum and minimum number of affected pairs and then adjusting the counts for these distances.
+     - **Differential Updates**: The code uses a `diff` array to store differential values, which are used to efficiently update the counts for longer distances where the additional street affects the count. This step is crucial as it allows updating many values in the `ans` array in a single pass at the end.
+
+4. **Applying Differential Updates**:
+   - Finally, the code iterates through the `diff` array, applying the differential updates to the `ans` array. This is where the prefix sum technique is used – the differential values in `diff` are added to the running total, and these totals are used to update the counts in the `ans` array.
+
+### Summary of the Logic:
+
+- The algorithm efficiently calculates the initial number of pairs for each distance, assuming a linear arrangement of houses.
+- It then adjusts these counts to account for the additional street, which can provide shortcuts for certain pairs of houses.
+- The use of the `diff` array for differential updates and the prefix sum technique for applying these updates ensures efficient handling of the problem, especially for large values of `n`.
+- The final `ans` array contains the total count of pairs of houses for each distance, considering the additional street.
+
+*/

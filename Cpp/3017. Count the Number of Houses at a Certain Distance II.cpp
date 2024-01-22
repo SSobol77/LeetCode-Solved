@@ -79,3 +79,123 @@ public:
 };
 
 */
+// Solution:
+
+class Solution {
+public:
+    vector<long long> countOfPairs(int n, int x, int y) {
+        vector<long long> psa(n+5); // Initialize a prefix sum array (psa) with a size slightly larger than n for safety
+
+        // Ensure x is always less than y for consistent processing
+        if (x > y) swap(x, y);
+
+        // Handle the special case when x is equal to y
+        if (x == y) {
+            for (int i = 1; i <= n; i++) {
+                // When x equals y, the problem reduces to a simple linear arrangement of houses
+                psa[1]++; psa[i]--;
+                psa[1]++; psa[n+1-i]--;
+            }
+        } else {
+            // Main loop for handling the case when x is not equal to y
+            for (int i = 1; i <= n; i++) {
+                // If current house is before x
+                if (i <= x) {
+                    // Update prefix sum array for direct paths and paths going through the additional street
+                    psa[1]++; psa[i]--;
+                    psa[1]++; psa[x-i+1]--;
+
+                    // Calculate midpoints between x and y
+                    int rq = y - x;
+                    int h = rq / 2;
+                    int h2 = rq - h;
+
+                    // Update psa for paths using the additional street with different split points
+                    psa[x-i+1]++; psa[h+1+x-i]--;
+                    psa[x-i+1]++; psa[h2+1+x-i]--;
+                    psa[x-i+2]++; psa[n+1-y+1+x-i]--;
+                }
+                // If current house is after y
+                else if (i >= y) {
+                    // Similar updates as above but for houses after y
+                    psa[1]++; psa[n-i+1]--;
+                    psa[1]++; psa[i-y+1]--;
+
+                    // Calculate and use midpoints between x and y for updates
+                    int rq = y - x;
+                    int h = rq / 2;
+                    int h2 = rq - h;
+
+                    psa[i-y+1]++; psa[i-y+h+1]--;
+                    psa[i-y+1]++; psa[i-y+h2+1]--;
+                    psa[i-y+2]++; psa[x+1+i-y]--;
+                }
+                // If current house is between x and y
+                else {
+                    // Calculate midpoints and update psa accordingly
+                    int rq = y - x;
+                    int h = rq / 2;
+                    int h2 = rq - h;
+
+                    psa[1]++; psa[h+1]--;
+                    psa[1]++; psa[h2+1]--;
+
+                    // Determine closest distances to either x or y
+                    int distX = min(i-x, y-i+1);
+                    int distY = min(y-i, i-x+1);
+
+                    // Update psa based on these distances
+                    psa[distX+1]++;
+                    psa[distX+x]--;
+                    psa[distY+1]++;
+                    psa[distY+n-y+1]--;
+                }
+            }
+        }
+
+        vector<long long> pairs; // Initialize the result vector
+        // Convert the prefix sum array to the actual count of pairs
+        for (int i = 1; i <= n; i++) {
+            psa[i] += psa[i-1];
+            pairs.push_back(psa[i]);
+        }
+        return pairs; // Return the final result
+    }
+};
+
+
+// Description:
+/*
+The strategy used in your code to solve the problem of counting the number of pairs of houses at certain distances involves the use of a prefix sum array (`psa`) for efficient computation. Here's a detailed description of the algorithm and the logic behind the solution:
+
+### Algorithm and Logic:
+
+1. **Prefix Sum Array Initialization**:
+   - A prefix sum array (`psa`) is initialized with a size slightly larger than `n`. This array is used to efficiently calculate the cumulative counts of pairs at various distances.
+
+2. **Handling `x` and `y` Order**:
+   - The code ensures that `x` is always less than or equal to `y` by swapping them if necessary. This simplification allows for consistent processing in subsequent steps.
+
+3. **Special Case - `x` Equals `y`**:
+   - When `x` is equal to `y`, the additional street does not affect the distance between any houses. The problem simplifies to a linear arrangement of houses. The code updates `psa` to reflect the count of pairs at each distance considering only direct paths.
+
+4. **General Case - `x` Not Equal to `y`**:
+   - The code then iterates over each house position `i` from 1 to `n`.
+   - It handles three main scenarios based on the position of `i` relative to `x` and `y`:
+     - **Before `x`**: Updates `psa` for direct paths and paths going through the additional street, considering distances to `x` and the midpoint between `x` and `y`.
+     - **After `y`**: Similar to the case of before `x`, but considering distances from `y`.
+     - **Between `x` and `y`**: Updates `psa` considering paths that use the additional street and the closest distances to either `x` or `y`.
+
+5. **Prefix Sum Computation**:
+   - The code computes the prefix sums in `psa` to transform it into the actual count of pairs for each possible distance.
+
+6. **Final Result Construction**:
+   - Finally, the code constructs the result vector `pairs` from `psa`, where each element represents the total number of pairs of houses such that the minimum number of streets required to reach one house from the other is a specific distance.
+
+### Summary of the Logic:
+
+- The code cleverly uses the prefix sum technique to accumulate the number of pairs of houses at each distance, considering both direct paths and paths that may include the additional street.
+- It efficiently handles different relative positions of houses to `x` and `y`, ensuring that the additional street's impact on distances is correctly accounted for in the counts.
+- The final transformation of the prefix sums into the actual counts provides the solution to the problem.
+
+*/
