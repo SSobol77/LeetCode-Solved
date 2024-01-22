@@ -1,6 +1,5 @@
 # 3014. Minimum Number of Pushes to Type Word I.
 
-
 """
 ### Task:
 
@@ -117,4 +116,5 @@ We'll implement this strategy in the `minimumPushes` method of the `Solution` cl
 This code first calculates the length of the word. Then, it iterates through each character, determining the number
 of key presses needed for each character based on its position in the sequence. The total number of key presses is
 accumulated in the `pushes` variable, which is returned at the end.
+
 '''
