@@ -52,7 +52,7 @@ The second train of thought is, without changing the array, can we use additiona
 ---
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
-        
+
 
 """
 
@@ -61,17 +61,17 @@ class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         # Create a dictionary to store the indices of seen numbers
         num_indices = {}
-        
+
         for i, num in enumerate(nums):
             complement = target - num
-            
+
             # Check if the complement exists in the dictionary
             if complement in num_indices:
                 return [num_indices[complement], i]
-            
+
             # Store the current number and its index in the dictionary
             num_indices[num] = i
-        
+
         # If no solution is found, return an empty list or raise an exception
         # (You can handle this case based on your requirements)
         return []
@@ -80,12 +80,11 @@ class Solution:
 ### Description:
 '''
 This code iterates through the input array nums once. For each element, it calculates the complement (i.e., target - num)
-and checks if the complement exists in the num_indices dictionary. If it does, it means a pair of indices has been found 
-that adds up to the target, and it returns those indices. If not, it adds the current number and its index to the dictionary 
+and checks if the complement exists in the num_indices dictionary. If it does, it means a pair of indices has been found
+that adds up to the target, and it returns those indices. If not, it adds the current number and its index to the dictionary
 for future reference.
 
-This solution has a time complexity of O(n) because it iterates through the array once and has constant time lookup in the 
+This solution has a time complexity of O(n) because it iterates through the array once and has constant time lookup in the
 dictionary.
 
 '''
-
