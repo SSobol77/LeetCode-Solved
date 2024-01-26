@@ -1,6 +1,6 @@
 
 <h4 align="center"><img src="https://github.com/SSobol77/LeetCode-Solved/blob/main/leetcode.jpg " width="100" height="100"/></h4>
-<h1 align="center"> LeetCode-Solveds</h1>
+<h1 align="center"> LeetCode-Solved</h1>
 
 
 <p align="center"> 
