@@ -73,14 +73,121 @@ public:
 
 */
 // Solution: --------------------------------------
+#include <set>
+#include <vector>
+using namespace std;
 
+class Solution {
+public:
+    long long minimumCost(vector<int>& nums, int k, int dist) {
+        // Multisets to store the smallest (sml) and the larger (big) elements within the window
+        multiset<int> sml, big;
 
+        // Window size is dist + 1
+        int sz = dist + 1;
+
+        // Sum to keep track of the sum of elements in 'sml'
+        long long sum = 0, ans = 0;
+
+        // Initialize 'sml' with first 'sz' elements starting from index 1
+        // and update 'sum' with these elements
+        for (int i = 1; i <= sz; i++) {
+            sml.insert(nums[i]);
+            sum += nums[i];
+        }
+
+        // Ensure 'sml' contains only 'k - 1' smallest elements by moving the largest to 'big'
+        // and adjusting 'sum' accordingly
+        while (sml.size() > k - 1) {
+            big.insert(*sml.rbegin()); // Move the largest from 'sml' to 'big'
+            sum -= *sml.rbegin(); // Adjust 'sum' by removing the largest element's value
+            sml.erase(sml.find(*sml.rbegin())); // Remove the largest element from 'sml'
+        }
+
+        // Set initial answer to the sum of smallest 'k - 1' elements
+        ans = sum;
+
+        // Iterate through the rest of the array starting from 'sz + 1'
+        for (int i = sz + 1; i < nums.size(); i++) {
+            // Add new element to 'sum' and 'sml'
+            sum += nums[i];
+            sml.insert(nums[i]);
+
+            // If the element that falls out of the window is in 'big', remove it from 'big'
+            // Otherwise, remove it from 'sml' and adjust 'sum'
+            if (big.find(nums[i - sz]) != big.end()) {
+                big.erase(big.find(nums[i - sz]));
+            } else {
+                sum -= nums[i - sz];
+                sml.erase(sml.find(nums[i - sz]));
+            }
+
+            // Ensure 'sml' contains exactly 'k - 1' smallest elements
+            // by moving elements between 'sml' and 'big' as necessary
+            while (sml.size() > k - 1) {
+                sum -= *sml.rbegin();
+                big.insert(*sml.rbegin());
+                sml.erase(sml.find(*sml.rbegin()));
+            }
+            while (sml.size() < k - 1) {
+                sum += *big.begin();
+                sml.insert(*big.begin());
+                big.erase(big.begin());
+            }
+
+            // Swap elements between 'sml' and 'big' if the largest in 'sml' is greater than the smallest in 'big'
+            // and adjust 'sum' accordingly
+            while (!sml.empty() && !big.empty() && *sml.rbegin() > *big.begin()) {
+                sum -= *sml.rbegin() - *big.begin();
+                sml.insert(*big.begin());
+                big.insert(*sml.rbegin());
+                sml.erase(sml.find(*sml.rbegin()));
+                big.erase(big.begin());
+            }
+
+            // Update 'ans' with the minimum of 'ans' and the current 'sum'
+            ans = min(ans, sum);
+        }
+
+        // Final answer is the cost of the first subarray (nums[0]) plus the minimum sum ('ans') of subsequent subarrays
+        return nums[0] + ans;
+    }
+};
 
 
 // Description: ===================================
 /*
+Your solution uses an interesting approach involving two multisets to manage the elements within a sliding window of 
+size `dist + 1` while maintaining the `k - 1` smallest elements in one multiset (`sml`) and the larger elements in 
+another (`big`). The algorithm aims to find the minimum possible sum of the costs of dividing the array into `k` disjoint 
+contiguous subarrays with the constraints given. Here's a description of the algorithm based on your solution:
 
+1. **Initialization**: 
+    - Create two multisets: `sml` for the smallest elements and `big` for the larger elements.
+    - Set the size of the sliding window as `sz = dist + 1`.
+    - Initialize `sum` to 0 to hold the sum of elements in `sml`, and `ans` to 0 to hold the final answer.
 
+2. **First Window Setup**: 
+    - Populate `sml` with the first `sz` elements from `nums`, starting from index 1, and update `sum` accordingly.
+    - If `sml` has more than `k - 1` elements, move the largest elements to `big` and adjust `sum` to reflect the sum of 
+      the `k - 1` smallest elements.
 
+3. **Sliding Window Iteration**: 
+    - Iterate through the rest of the array starting from index `sz + 1`.
+    - For each new element, add it to `sum` and `sml`. If the element that falls out of the window (`nums[i - sz]`) is 
+      in `big`, remove it from `big`; otherwise, remove it from `sml` and adjust `sum`.
+    - Ensure `sml` contains exactly `k - 1` smallest elements by moving elements between `sml` and `big` as necessary.
+    - If the largest element in `sml` is greater than the smallest element in `big`, swap them to maintain the order, 
+      and adjust `sum` accordingly.
+    - Update `ans` with the minimum of `ans` and the current `sum`.
+
+4. **Final Answer**: 
+    - The final answer is the sum of the smallest element (`nums[0]`, as the first subarray's cost) and the minimum sum (`ans`) 
+      calculated for the subarrays starting from the second element.
+
+This algorithm efficiently maintains a balance between the smallest `k - 1` elements within a sliding window of size `dist + 1`, 
+ensuring that the division of the array respects the given constraints. The use of multisets allows for easy insertion, deletion, 
+and retrieval of the smallest and largest elements, facilitating the dynamic adjustment of the window and the selection of subarray 
+costs.
 
 */
