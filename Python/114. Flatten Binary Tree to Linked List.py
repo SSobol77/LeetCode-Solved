@@ -81,7 +81,31 @@ class Solution:
 
 # Description:
 """
+The solution provided for flattening a binary tree into a linked list in place follows a different approach than the recursive solution previously discussed. This solution iteratively modifies the tree by re-wiring the left subtree's rightmost node to the right subtree, ensuring the tree is flattened in a preorder traversal manner. Here's a step-by-step description of how this algorithm works:
 
+### Algorithm Description:
+
+1. **Initialization**: Start with the `current` node set to the root of the tree. The algorithm iterates through the tree starting from the root, moving towards the rightmost node.
+
+2. **Iterating through the Tree**: The algorithm uses a `while` loop to traverse the tree. For each `current` node being processed, it checks if the `current` node has a left child.
+
+3. **Processing the Left Subtree**:
+    - If the `current` node has a left child, the algorithm finds the rightmost node in the left subtree. This is done by iterating through the left subtree using a `while` loop until the rightmost node is found.
+    - Once the rightmost node in the left subtree is identified, its right pointer is set to the `current` node's right child. This effectively appends the entire right subtree to the end of the left subtree.
+
+4. **Re-wiring Connections**:
+    - The `current` node's right pointer is then updated to point to its left child, effectively moving the left subtree to the right side. This maintains the preorder sequence (root, left, right) since the left subtree is now positioned in the place of the right subtree.
+    - The `current` node's left pointer is set to `None`, removing the original left subtree.
+
+5. **Moving to the Next Node**: After re-wiring the connections for the `current` node, the algorithm moves to the next node by setting `current` to `current.right`. This step progresses the flattening process to the next node in the preorder sequence.
+
+6. **Continuation Condition**: The loop continues until there are no more nodes to process, i.e., until `current` becomes `None`. At this point, the entire tree has been flattened into a linked list.
+
+7. **In-Place Modification**: Throughout the process, the tree is modified in place. No new nodes are created, and the existing nodes are merely re-wired to achieve the flattened structure.
+
+8. **Termination**: When the `while` loop exits, the tree has been successfully flattened into a linked list following the preorder traversal order, with all nodes' left pointers set to `None` and right pointers leading to the subsequent nodes in the list.
+
+This iterative approach efficiently flattens the binary tree by carefully re-wiring the nodes' pointers, ensuring that the space complexity is kept to O(1) as no additional data structures are used and all modifications are performed in place.
 """
             
 
