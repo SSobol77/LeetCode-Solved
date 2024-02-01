@@ -1,5 +1,7 @@
 # 114. Flatten Binary Tree to Linked List
 
+# Topic: Linked List, Stack, Tree, Depth-First Search, Binary Tree.
+
 '''
 Task: 
 -----
@@ -47,7 +49,7 @@ class Solution:
         """
 
 '''
-# Solution
+# Solution:  ------------------------------------------------------------------
 
 class TreeNode:
     """Definition for a binary tree node"""
@@ -76,4 +78,10 @@ class Solution:
 
             # Move to the next node
             current = current.right
+
+# Description:
+"""
+
+"""
+            
 
