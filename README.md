@@ -1,7 +1,7 @@
 
 <h4 align="center"><img src="https://github.com/SSobol77/LeetCode-Solved/blob/main/leetcode.jpg " width="100" height="100"/></h4>
 <h1 align="center"> LeetCode-Solved</h1>
-
+<h4 align="center"><img src="https://github.com/SSobol77/LeetCode-Solved/blob/main/LeetCode50.png " width="100" height="100"/></h4>
 
 <p align="center"> 
 
