@@ -112,6 +112,7 @@ public:
 To solve the "Cheapest Flights Within K Stops" problem, we can use a Dynamic Programming approach, which is particularly efficient for this type of shortest path problem with constraints (like the maximum number of stops). The Bellman-Ford algorithm is a suitable choice here, as it is designed to find the shortest paths from a single source to all other vertices in a weighted graph, handling graphs with negative weight edges as well.
 
 ### Approach:
+
 1. **Initialization:** Create a 2D array `dp` with dimensions `(k + 2) x n` to store the minimum costs. `dp[i][j]` represents the minimum cost to reach city `j` from the source city `src` with at most `i - 1` stops. Initialize the first row (i.e., when 0 stops are used) with `INT_MAX` (infinity) except for `dp[0][src]`, which should be 0, as it costs nothing to stay at the source.
    
 2. **Dynamic Programming Update:** For each level of stops from 1 to `k + 1` (inclusive), iterate through each flight `[from, to, price]` and update the DP table: `dp[stops][to] = min(dp[stops][to], dp[stops - 1][from] + price)`. This step essentially relaxes the edges, considering an additional stop and updating the minimum cost if a cheaper path is found.
@@ -119,6 +120,7 @@ To solve the "Cheapest Flights Within K Stops" problem, we can use a Dynamic Pro
 3. **Answer Extraction:** After filling the DP table, the answer will be in `dp[k + 1][dst]`, which represents the minimum cost to reach `dst` from `src` with at most `k` stops. If this value is `INT_MAX`, it means no such path exists, and we return -1.
 
 ### Explanation:
+
 - The DP table `dp` is used to keep track of the minimum costs while incrementally increasing the number of stops.
 - By iterating up to `k + 1` stops, we ensure that the path can have at most `k` intermediate stops between the source and the destination.
 - The relaxation step updates the DP table based on the current knowledge of the cheapest paths with one less stop.
