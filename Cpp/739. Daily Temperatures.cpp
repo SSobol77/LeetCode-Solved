@@ -47,18 +47,55 @@ public:
 */
 // Solution: ----------------------------------------------------------
 
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        // Initialize result vector with 0s, same length as temperatures array
+        vector<int> result(temperatures.size(), 0);  
+        // Stack to store indices of the temperatures array, for temperatures that are waiting to find a warmer day
+        stack<int> tempIndices;  
+
+        // Iterate through each day in the temperatures array
+        for (int i = 0; i < temperatures.size(); ++i) {
+            // While the stack is not empty and the current temperature is warmer than the temperature at the index on the top of the stack
+            while (!tempIndices.empty() && temperatures[i] > temperatures[tempIndices.top()]) {
+                int idx = tempIndices.top();  // Get the index from the top of the stack
+                tempIndices.pop();  // Remove the top element from the stack
+                result[idx] = i - idx;  // Update the result for this index with the number of days to wait for a warmer temperature
+            }
+            // Push the current index onto the stack. This index represents a temperature that is waiting to find a warmer future day.
+            tempIndices.push(i);  
+        }
+
+        // Return the result vector, which now contains the number of days to wait for a warmer temperature for each day
+        return result;  
+    }
+};
+
+
 // Description:
 /*
-To solve the "Daily Temperatures" problem, we can use a Monotonic Stack approach. A Monotonic Stack is particularly useful in this scenario because it helps us keep track of elements (temperatures in this case) in a way that allows us to efficiently find the next greater element for each item in the array. The stack will store indices of the temperatures array, and we will maintain it in a decreasing order of temperatures (from bottom to top of the stack).
+To solve the "Daily Temperatures" problem, we can use a monotonic stack, which is a stack where the elements are always in 
+decreasing order from top to bottom. The stack will store the indices of the temperatures array. As we iterate through the 
+temperatures array, we'll compare the current temperature with the temperature at the index on top of the stack. If the 
+current temperature is warmer, it means we have found a warmer day for the day at the stack's top index, and we can calculate 
+the difference in days.
 
-Here's a step-by-step approach to implement the solution:
-1. Initialize an empty stack that will store indices of the `temperatures` array.
-2. Initialize the `answer` array of the same length as `temperatures` with all elements set to 0. This array will hold the number of days to wait for a warmer temperature.
-3. Iterate through the `temperatures` array. For each temperature, perform the following steps:
-   - While the stack is not empty and the current temperature is greater than the temperature at the index on the top of the stack, it means we have found a warmer temperature for the day at the top of the stack. Pop the top index from the stack, and calculate the difference between the current index and the popped index to find the number of days to wait. Update the `answer` array at the popped index with this difference.
-   - Push the current index onto the stack.
-4. After iterating through all temperatures, the `answer` array will have the required number of days to wait for a warmer temperature for each day.
+Here's a step-by-step guide to the algorithm:
 
+1. Initialize an empty stack to store indices of the temperatures array.
+2. Create a result vector initialized with 0s, with the same size as the temperatures array. This vector will store the number 
+   of days to wait for a warmer temperature.
+3. Iterate through each day in the temperatures array.
+4. While the stack is not empty and the current temperature is warmer than the temperature at the index on top of the stack, pop 
+   from the stack. For each popped index, update the result at that index with the current day index minus the popped index, 
+   indicating the number of days to wait for a warmer temperature.
+5. Push the current index onto the stack.
+6. After iterating through all temperatures, return the result vector.
 
-This solution efficiently computes the required number of days to wait for a warmer temperature for each day, leveraging the Monotonic Stack data structure to maintain relevant indices and facilitate the comparison process.
+In this solution, the stack is used to keep track of temperatures that have not yet found a warmer day. By maintaining the 
+stack in a decreasing order, we ensure that once we encounter a warmer temperature, we can efficiently update the result for 
+all cooler temperatures stored in the stack before it. This approach ensures that each temperature is pushed and popped from 
+the stack exactly once, leading to a time complexity of O(n), where n is the length of the temperatures array.
+
 */
