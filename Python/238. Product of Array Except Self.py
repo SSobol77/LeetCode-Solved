@@ -43,29 +43,28 @@ class Solution:
 
 class Solution:
     def productExceptSelf(self, nums):
+        # Get the number of elements in nums
         n = len(nums)
-        # Initialize two arrays: 'left' to store the product of elements to the left of each index,
-        # and 'result' to store the final product values.
-        left, result = [0] * n, [0] * n
         
-        # The product of elements to the left of the first element is 1 (since there are no elements to the left)
-        left[0] = 1
-        for i in range(1, n):
-            # left[i] is the product of all elements to the left of 'nums[i]', which is
-            # the product up to 'nums[i - 1]' (stored in left[i - 1]) times 'nums[i - 1]'
-            left[i] = nums[i - 1] * left[i - 1]
-        
-        # 'right' will keep track of the product of elements to the right of the current index
-        right = 1
-        for i in range(n - 1, -1, -1): # Loop through the array in reverse
-            # For each index i, multiply the product of all elements to the left (left[i])
-            # with the product of all elements to the right (right) to get the final product
-            result[i] = left[i] * right
-            # Update 'right' to include the current element, for the next iteration
-            right *= nums[i]
-        
-        return result
+        # Initialize the result list with 1s for each element
+        result = [1] * n
 
+        # Initialize left_product as 1 before the start of the loop
+        left_product = 1
+        # Calculate the product of all elements to the left of each element
+        for i in range(1, n):
+            left_product *= nums[i - 1]  # Multiply the current left_product with the element to the left of i
+            result[i] = left_product  # Store the current left_product in result[i]
+
+        # Initialize right_product as 1 before the start of the loop
+        right_product = 1
+        # Calculate the product of all elements to the right of each element
+        for i in range(n - 1, -1, -1):  # Start from the end of the list and move backwards
+            result[i] *= right_product  # Multiply the current value in result[i] by the right_product
+            right_product *= nums[i]  # Update right_product to include the current element
+
+        # Return the result list containing the product of all elements except self
+        return result
 
 # Test the function with the provided test cases
 sol = Solution()
@@ -81,55 +80,8 @@ output_1, output_2
 
 # Description: ==================================
 '''
-In this code:
-- The `left` array is used to store the cumulative product of all elements to the left of each index in the input array.
-- The `right` variable is used to keep track of the cumulative product of elements to the right of the current index as we iterate 
-  backward through the array.
-- The final result is obtained by multiplying the corresponding values from the `left` array and the `right` variable.
-
-
-The "Product of Array Except Self" problem requires us to calculate, for each element in the array, the product of all other 
-elements in the array without including the current element. The challenge is to do this efficiently, in O(n) time complexity, 
-and without using division.
-
-### Algorithm:
-1. Create two arrays, `left` and `right`, each of the same length as the input array `nums`. 
-2. Fill the `left` array such that `left[i]` contains the product of all elements to the left of `i` in `nums`.
-3. Similarly, fill the `right` array such that `right[i]` contains the product of all elements to the right of `i` in `nums`.
-4. Create an output array `result` of the same length as `nums`.
-5. For each index `i` in `nums`, calculate `result[i]` as `left[i] * right[i]`.
-6. Return `result`.
-
-### Optimization for Space Complexity:
-To optimize space complexity, we can avoid using the `right` array. Instead, we can directly accumulate the product from the 
-right in a variable and use it to update the `result` array.
-
-
-### Explanation:
-- `left` array stores the cumulative product of elements to the left of the current index.
-- We iterate from right to left, keeping track of the cumulative product (`right`) and multiplying it with the corresponding 
- `left` value to get the final product for each index.
-- This approach takes O(n) time and O(1) space (excluding the output array).
-
-### Example Execution:
-- Input: `[1,2,3,4]`
-- `left` array after first loop: `[
-
-The implemented solution correctly solves the "Product of Array Except Self" problem for the given test cases:
-
-1. For the input `[1, 2, 3, 4]`, the output is `[24, 12, 8, 6]`. 
-   - Here, each element in the output array is the product of all other elements in the input array, except for the element at the 
-    corresponding position.
-
-2. For the input `[-1, 1, 0, -3, 3]`, the output is `[0, 0, 9, 0, 0]`.
-   - Notably, when there's a `0` in the input array (like in this case), the product for all positions except where the zero is 
-     located will be `0`, since multiplying by zero results in zero. The position corresponding to the zero in the input array 
-     gets the product of all other (non-zero) elements.
-
-This solution meets the requirements of the problem:
-- It runs in O(n) time complexity, iterating over the array twice.
-- It doesn't use the division operation.
-- It has O(1) extra space complexity, excluding the output array, as it uses only a constant amount of additional space for the 
-  `left` and `right` variables.
+This code uses two passes to compute the result:
+1. The first pass (forward) computes the running product of all elements to the left of each index and stores it in the `result` array.
+2. The second pass (backward) multiplies the running product of all elements to the right of each index by the value already stored in `result` from the first pass, giving the final answer.
 
 '''
