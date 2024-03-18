@@ -93,6 +93,4 @@ By the end of the iteration, the arrow counter will represent the minimum number
 - If `x_start > first_end`, it means the current balloon cannot be burst by an arrow shot at `first_end`, so we need a new arrow. We increment `arrows` and update `first_end` to the end of the current balloon (`x_end`).
 - Finally, we return the total count of arrows needed.
 
-
-
 '''
