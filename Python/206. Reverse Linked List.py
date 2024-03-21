@@ -1,39 +1,39 @@
 # 206. Reverse Linked List.
 
-# Topic: Linked List, Recursion.
+# Topics: Linked List, Recursion.
 
-"""
-### Task:
----
+'''
+## Task:
+--------
 Given the head of a singly linked list, reverse the list, and return the reversed list.
 
-#Example 1:
+Example 1:
 Input: head = [1,2,3,4,5]
 Output: [5,4,3,2,1]
 
-#Example 2:
+Example 2:
 Input: head = [1,2]
 Output: [2,1]
 
-#Example 3:
+Example 3:
 Input: head = []
 Output: []
 
-#Constraints:
+Constraints:
 The number of nodes in the list is the range [0, 5000].
 -5000 <= Node.val <= 5000
 
 Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
 
-### Testcase:
----
+
+## Testcase:
+------------
 [1,2,3,4,5]
 [1,2]
 []
 
-
-### Code:
----
+## Code:
+--------
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
@@ -41,91 +41,168 @@ Follow up: A linked list can be reversed either iteratively or recursively. Coul
 #         self.next = next
 class Solution:
     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        
+           
+'''
 
-"""
-### Solution: --------------------------------------------------------------------------------------------
+# Solution: ---------------------------------------------------------------------------------------------------------
 
-# Sol. 1. Iterative Approach:
+### Solution 1: Iterative Approach with Comments
+from typing import Optional
 
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-
-class Solution:
-    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        prev = None  # Initialize a pointer to keep track of the previous node
-        current = head  # Start at the head of the linked list
-        
-        while current:
-            next_node = current.next  # Store the next node temporarily
-            current.next = prev  # Reverse the next pointer
-            prev = current  # Move the previous pointer forward
-            current = next_node  # Move the current pointer forward
-        
-        return prev  # Return the new head of the reversed list
-
-
-# Sol. 2. Recursive Approach:
-    
-# Definition for singly-linked list.
-# class ListNode:
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
 
 class Solution:
     def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        # Base case: if the list is empty or has only one node, return the head
+        prev = None  # Initialize previous node as None
+        curr = head  # Start with the head as the current node
+        while curr:  # Iterate until the end of the list
+            next = curr.next  # Save the next node
+            curr.next = prev  # Reverse current node's pointer
+            prev = curr  # Move prev to the current node
+            curr = next  # Move to the next node in the original list
+        # At the end, prev will be the new head of the reversed list
+        return prev
+
+
+### Solution 2: Recursive Approach with Comments
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        # Base case: if list is empty or has a single node, return head
         if not head or not head.next:
             return head
-        
-        # Recursive case: reverse the sublist starting from head's next
-        reversed_head = self.reverseList(head.next)
-        
-        # Update the next pointer of the current head to point to None
+
+        # Recursively reverse the rest of the list from the second node
+        reversed_list = self.reverseList(head.next)
+
+        # Reverse the link between the current node and the next node
+        head.next.next = head
+        # Set the current node's next pointer to None to avoid cycles
+        head.next = None
+
+        # Return the head of the reversed list
+        return reversed_list
+
+
+# Description: ================================================================================================
+'''
+To solve the problem of reversing a singly linked list, we can approach it in two ways: iteratively and recursively. 
+Here, I'll provide solutions for both methods.
+
+### Iterative Approach
+In the iterative approach, we use a loop to reverse the links between nodes. We'll have three pointers: `prev`, `curr`, 
+and `next`. Initially, `prev` is set to `None` and `curr` is set to the head of the list. In each iteration, we'll reverse 
+the link between the current node and the next node, and then move the pointers one step forward.
+
+
+### Recursive Approach
+In the recursive approach, we dive to the end of the list and then start reversing the links as we backtrack. The base case 
+occurs when we reach the end of the list (`head` is `None` or `head.next` is `None`). On backtracking, we set the `next` 
+node's `next` pointer to the current node, effectively reversing the link, and then set the current node's `next` pointer 
+to `None` to avoid cycles.
+
+In the recursive solution, `reversed_list` holds the head of the reversed list, which is the last node we reach before hitting 
+the base case. As we backtrack, we reverse the links and set the `next` pointer of the last node (which becomes the head of the 
+reversed list) to `None` to complete the reversal.
+
+'''
+
+### Tests code:
+
+# To test the iterative and recursive solutions for reversing a singly linked list, we can create a small testing framework. 
+# This framework will include a function to build a linked list from a Python list, a function to convert a linked list back 
+# to a Python list (for easy comparison), and finally, test cases to verify the correctness of both solutions.
+
+# the test framework:
+from typing import Optional
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverseListIterative(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        curr = head
+        while curr:
+            next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = next
+        return prev
+
+    def reverseListRecursive(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+        reversed_list = self.reverseListRecursive(head.next)
         head.next.next = head
         head.next = None
+        return reversed_list
+
+def build_list(elements):
+    """Build a linked list from a Python list and return the head."""
+    head = current = None
+    for element in elements:
+        if not head:
+            head = current = ListNode(element)
+        else:
+            current.next = ListNode(element)
+            current = current.next
+    return head
+
+def to_list(head):
+    """Convert a linked list back to a Python list."""
+    elements = []
+    while head:
+        elements.append(head.val)
+        head = head.next
+    return elements
+
+def test_solution():
+    tests = [
+        ([1, 2, 3, 4, 5], [5, 4, 3, 2, 1]),
+        ([1, 2], [2, 1]),
+        ([], []),
+    ]
+    solution = Solution()
+    for input_list, expected_output in tests:
+        head = build_list(input_list)
         
-        return reversed_head  # Return the new head of the reversed list
+        # Test iterative solution
+        reversed_head_iterative = solution.reverseListIterative(head)
+        result_iterative = to_list(reversed_head_iterative)
+        assert result_iterative == expected_output, f"Iterative failed for {input_list}. Expected {expected_output}, got {result_iterative}"
 
+        # Since the list has been reversed, rebuild it for the recursive test
+        head = build_list(input_list)
 
-# Description: --------------------------------------------------------------------------------------------
+        # Test recursive solution
+        reversed_head_recursive = solution.reverseListRecursive(head)
+        result_recursive = to_list(reversed_head_recursive)
+        assert result_recursive == expected_output, f"Recursive failed for {input_list}. Expected {expected_output}, got {result_recursive}"
+
+    print("All tests passed!")
+
+test_solution()
+
 '''
-Descriptions for both the iterative and recursive solutions to the "Reverse Linked List" problem:
+This test framework defines a few utility functions:
+    
+- `build_list(elements)` takes a Python list and constructs a linked list.
+- `to_list(head)` converts a linked list back into a Python list for easy comparison.
+- `test_solution()` runs predefined test cases, including edge cases like an empty list, to ensure both iterative and 
+   recursive solutions work as expected.
 
-**Iterative Approach:**
-
-In the iterative approach, the goal is to reverse a singly linked list by iteratively changing the direction of the `next` 
-pointers of each node. We start with two pointers, `prev` and `current`, initially set to `None` and the `head` of the 
-linked list, respectively. 
-
-We traverse the linked list, and at each step, we update the `next` pointer of the `current` node to point to the `prev` node,
-effectively reversing the direction of the edge. Then, we move both the `prev` and `current` pointers one step forward in the list.
-
-This process continues until we reach the end of the original list, at which point the `prev` pointer points to the new head of 
-the reversed list. Finally, we return this new head.
-
-The time complexity of this iterative approach is O(n), where n is the number of nodes in the linked list, as we visit each node 
-once, making it an efficient solution for reversing the list.
-
-
-**Recursive Approach:**
-
-In the recursive approach, we reverse a singly linked list by recursively reversing a sublist starting from the second node (i.e., 
-the `head.next`) and connecting it to the current head node. We use a base case to handle empty lists or lists with only one node.
-
-The recursive function takes the current `head` as input and, in the base case, returns the `head` itself. For non-base cases, the 
-function recursively reverses the sublist starting from `head.next` and returns the new head of the reversed sublist.
-
-After reversing the sublist, we update the `next` pointer of the current `head` (originally the first node) to point to `None`. This 
-step effectively reverses the direction of the edge for the current `head` node.
-
-The recursion continues until we reach the end of the original list, at which point the new head of the reversed list is returned.
-
-The time complexity of this recursive approach is also O(n), where n is the number of nodes in the linked list, as we process each 
-node once during the recursive calls. Although this approach is less intuitive than the iterative one, it is a valid and efficient way to reverse a linked list.
+After running `test_solution()`, it will either print "All tests passed!" if all tests succeed, or it will raise an assertion 
+error indicating which test case failed and why. This helps in quickly identifying and fixing any issues in the implementation.
 
 '''
