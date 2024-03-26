@@ -1,12 +1,10 @@
-# 41. First Missing Positive.
+# 41. First Missing Positive.       - HARD -
 
-# Topic: Array, Hash Table
+# Topics: Array, Hash Table.
 
-"""
-### Task:
----
-Given an unsorted integer array nums, return the smallest missing positive integer.
-
+'''
+# Task:
+Given an unsorted integer array nums. Return the smallest positive integer that is not present in nums.
 You must implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.
 
 Example 1:
@@ -25,80 +23,72 @@ Output: 1
 Explanation: The smallest positive integer 1 is missing.
 
 Constraints:
-1 <= nums.length <= 105
+1 <= nums.length <= 10^5
 -2^31 <= nums[i] <= 2^31 - 1
 
+Hint 1:
+Think about how you would solve the problem in non-constant space. Can you apply that logic to the existing space?
+Hint 2:
+We don't care about duplicates or non-positive integers
+Hint 3:
+Remember that O(2n) = O(n)
 
-### Tstcase:
----
+# Testcase:
 [1,2,0]
 [3,4,-1,1]
 [7,8,9,11,12]
 
-
-### Code:
----
+# Code:
 class Solution:
     def firstMissingPositive(self, nums: List[int]) -> int:
-
-"""
-###Solution: ------------------------------------------------
+     
+'''
+## Solution:
 
 class Solution:
-    def firstMissingPositive(self, nums: List[int]) -> int:
+    def firstMissingPositive(self, nums):
         n = len(nums)
 
-        # Iterate through each number in the array
+        # Place each number in its right place
         for i in range(n):
-            # Check if the current number belongs in this array (is in the range 1 to n)
-            # and is not already in its correct position
             while 1 <= nums[i] <= n and nums[nums[i] - 1] != nums[i]:
-                # Swap the number with the number at its 'correct' position
-                # nums[i] - 1 is the index where nums[i] should be placed
+                # Swap nums[i] with nums[nums[i] - 1]
                 nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
 
-        # After rearranging, we iterate through the array again
+        # Find the first place where nums[i] != i + 1
         for i in range(n):
-            # The first position where the number is not i + 1,
-            # i.e., the number at index i is not equal to i + 1, is our missing number
             if nums[i] != i + 1:
                 return i + 1
 
-        # If all numbers are in their correct positions and no number is missing in the sequence,
-        # then the smallest missing positive is just beyond the end of the array
+        # If no place found, the missing number is n + 1
         return n + 1
 
 
-### Description: =============================================
+## Description:
 '''
-To solve the "First Missing Positive" problem, we need to find the smallest missing positive integer in an unsorted array `nums`. 
-The constraints are to implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.
+To solve the problem "First Missing Positive" in O(n) time and O(1) space, we can employ the strategy of placing each number in 
+its corresponding position if possible, and then iterating through the array to find the first place where the number doesn't 
+match its index. This approach leverages the given array itself for storage to achieve the constant space requirement.
 
-We can achieve this by re-arranging the numbers in the array such that each positive integer `i` is placed in the `i-1` index position, 
-if possible. This way, we ensure that if an integer is in the array, it will be in its 'correct' position. After rearranging, we can 
-simply traverse the array to find the first position where the number is not `i + 1`, indicating the missing positive integer.
+Here's a detailed step-by-step description of the algorithm:
 
-Here's a step-by-step approach:
+1. **Ignore Non-Positive and Large Values**: First, we ignore any non-positive numbers and numbers larger than the length of 
+     the array, as the first missing positive cannot be outside the range `[1, len(nums) + 1]`. This is because in the best-case 
+     scenario, the array contains all positive numbers from 1 to `n`.
 
-1. Iterate through the array.
-2. For each number `nums[i]`, if it is a positive integer and within the range of the array length, swap it with the number 
-   at its 'correct' position (`nums[nums[i] - 1]`).
-3. Take care to handle duplicates and avoid infinite loops during swapping.
-4. After rearranging, iterate through the array again.
-5. The first position where `nums[i]` is not equal to `i + 1` is the missing number.
-6. If all positions are correct, then the missing number is `len(nums) + 1`.
+2. **Place Numbers in Their Correct Positions**: Iterate through the array and for each number `nums[i]`, if it is in the 
+     range `[1, len(nums)]` and it is not in its correct position (`nums[i] != nums[nums[i] - 1]`), swap it with the number 
+     in its correct position (`nums[nums[i] - 1]`). Repeat this process until every number is either out of range or in its 
+     correct position.
 
-This code works as follows:
+3. **Find the First Missing Positive**: After rearranging, iterate through the array again. The first index `i` 
+     where `nums[i] != i + 1` gives us the smallest missing positive number, which is `i + 1`. If all numbers are 
+     in their correct positions, then the smallest missing positive is `len(nums) + 1`.
 
-- It first rearranges the elements in the array such that if an element `x` is present in the array and `1 <= x <= n`, then 
-  it puts `x` at index `x - 1`.
-- Then it scans the array again. The first index `i` for which `nums[i] != i + 1` is the smallest missing positive integer. 
-  If all numbers are in their correct positions, the smallest missing positive integer is `n + 1`.
+4. **Return Result**: Return the first missing positive number found in step 3.
 
-In this code:
-- The first `for` loop rearranges the elements. It places each positive integer `x` in the array such that `x` is at index `x - 1`. This is done by swapping elements. The `while` loop is used to keep swapping until all elements are either in their correct positions or are out of range (less than 1 or greater than `n`).
-- The second `for` loop checks each position in the array. If an element is not in its 'correct' position (i.e., `nums[i]` is not `i + 1`), it means that `i + 1` is the smallest missing positive integer.
-- If all elements are in their correct positions, the smallest missing positive integer is `len(nums) + 1` (i.e., one more than the length of the array), as all integers from `1` to `n` are present.
 
+This code respects the constraints of running in O(n) time and using O(1) extra space, as it performs in-place swaps and 
+iterates through the array a constant number of times.
 
 '''
